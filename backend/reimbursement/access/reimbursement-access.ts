@@ -1,4 +1,4 @@
-import aws = require('aws-sdk');
+import * as aws from 'aws-sdk';
 import {ConfigurationOptions} from 'aws-sdk/lib/config';
 import * as STATUS from './reimbursement-status';
 const awsConfig: ConfigurationOptions = {
@@ -9,7 +9,6 @@ const awsConfig: ConfigurationOptions = {
 
 aws.config.update(awsConfig);
 
-const dynamodb = new aws.DynamoDB();
 const docClient = new aws.DynamoDB.DocumentClient();
 
 export function getAllReimbursementRequestsForUser(username: string): Promise<any> {
@@ -22,7 +21,7 @@ export function getAllReimbursementRequestsForUser(username: string): Promise<an
     }).promise();
 }
 
-export function addReimbursement(reimbursement): Promise<any> {
+export function addReimbursement(reimbursement:any): Promise<any> {
     return docClient.put({
         TableName: 'reimbursement',
         Item: reimbursement

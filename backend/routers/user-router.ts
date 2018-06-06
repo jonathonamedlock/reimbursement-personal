@@ -1,4 +1,4 @@
-import express = require('express');
+import * as express from 'express';
 import {Response, Request, NextFunction} from 'express';
 import * as userService from '../user/service/user-service';
 import * as reimbursementService from '../reimbursement/service/reimbursement-service';
@@ -7,7 +7,7 @@ import { authMiddleware, authUsername } from '../security/auth-middleware';
 
 export const userRouter = express.Router();
 
-userRouter.get('/:username', (req, resp, next) => {
+userRouter.get('/:username', (req:Request, resp:Response, next:NextFunction) => {
     if (!authUsername(req.params.username, req.session.username)) {
         resp.status(403);
         next();
@@ -23,7 +23,7 @@ userRouter.get('/:username', (req, resp, next) => {
     }
 });
 
-userRouter.get('/:username/reimbursements', (req, resp, next) => {
+userRouter.get('/:username/reimbursements', (req:Request, resp:Response, next:NextFunction) => {
     // TODO add authorization middleware
     console.log(req.params.username + ' ' + req.session.username);
     
@@ -35,7 +35,7 @@ userRouter.get('/:username/reimbursements', (req, resp, next) => {
         reimbursementService.getAllFor(req.params.username)
             .then((data) => {
                 let allReimbursements = new Array();
-                data.Items.forEach((value) => {
+                data.Items.forEach((value:any) => {
                     allReimbursements.push(value);
                 });
                 resp.json(allReimbursements);
@@ -45,7 +45,7 @@ userRouter.get('/:username/reimbursements', (req, resp, next) => {
     }
 });
 
-userRouter.post('/login', (req, resp, next) => {
+userRouter.post('/login', (req:Request, resp:Response, next:NextFunction) => {
     const user = req.body && req.body;
 
     userService.getUser(user.username)
@@ -76,7 +76,7 @@ userRouter.post('/login', (req, resp, next) => {
         });
 });
 
-userRouter.post('/:username/request', (req, resp, next) => {
+userRouter.post('/:username/request', (req:Request, resp:Response, next:NextFunction) => {
     if (!authUsername(req.params.username, req.session.username)) {
         resp.status(403);
         next();
@@ -96,7 +96,7 @@ userRouter.post('/:username/request', (req, resp, next) => {
     }
 });
 
-userRouter.post('/:username/cancel', (req, resp, next) => {
+userRouter.post('/:username/cancel', (req:Request, resp:Response, next:NextFunction) => {
     if (!authUsername(req.params.username, req.session.username)) {
         resp.status(403);
         next();
@@ -117,7 +117,7 @@ userRouter.post('/:username/cancel', (req, resp, next) => {
     }
 });
 
-userRouter.delete('/logout', (req, resp, next) => {
+userRouter.delete('/logout', (req:Request, resp:Response, next:NextFunction) => {
     req.session.regenerate(err => {
         if (err) {
             resp.sendStatus(500);

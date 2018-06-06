@@ -1,5 +1,5 @@
 export function authMiddleware(...allowedRoles: string[]) {
-    return (req, resp, next) => {
+    return (req:any, resp:any, next:any) => {
       const role = req.session && req.session.role;
       if (role) {
         if (allowedRoles.some(allowedRole => role === allowedRole)) {

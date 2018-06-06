@@ -16,10 +16,10 @@ export function getPendingFor(user: string) {
     return Access.getPendingReimbursementsForUser(user);
 }
 
-export function updateReimbursement(item, newStatus: string) {
+export function updateReimbursement(item:any, newStatus: string) {
     return Access.updateReimbursementStatus(item.username, item.timeSubmitted, newStatus);
 }
 
-export function addReimbursement(item) {
+export function addReimbursement(item:any) {
     return Access.addReimbursement(item);
 }

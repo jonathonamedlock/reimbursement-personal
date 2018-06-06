@@ -1,4 +1,4 @@
-import aws = require('aws-sdk');
+import * as aws from 'aws-sdk';
 import {ConfigurationOptions} from 'aws-sdk/lib/config';
 const awsConfig: ConfigurationOptions = {
   region: 'us-east-2',
@@ -8,7 +8,6 @@ const awsConfig: ConfigurationOptions = {
 
 aws.config.update(awsConfig);
 
-const dynamodb = new aws.DynamoDB();
 const docClient = new aws.DynamoDB.DocumentClient();
 
 export function getUserData(username: string): Promise<any> {
@@ -21,6 +20,6 @@ export function getUserData(username: string): Promise<any> {
     }).promise();
 }
 
-export function getAllUserData(params) {
+export function getAllUserData(params: any) {
     return docClient.scan(params).promise();
 }

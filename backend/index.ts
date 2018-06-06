@@ -1,7 +1,8 @@
-import express = require('express');
-import bodyParser = require('body-parser');
-import session = require('express-session');
-import path = require('path');
+//import express = require('express');
+import * as express from 'express';
+import * as bodyParser from 'body-parser';
+import * as session from 'express-session';
+import * as path from 'path';
 import { userRouter } from './routers/user-router';
 import { viewRouter } from './routers/view-router';
 

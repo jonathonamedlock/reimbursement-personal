@@ -1,4 +1,4 @@
-import express = require('express');
+import * as express from 'express';
 import { Request, Response, NextFunction } from 'express';
 import * as reimbursementService from '../reimbursement/service/reimbursement-service';
 import * as userService from '../user/service/user-service'
@@ -6,11 +6,11 @@ import { authMiddleware } from '../security/auth-middleware';
 
 export const viewRouter = express.Router();
 
-viewRouter.get('', [authMiddleware('financial'), (req, resp, next) => {
+viewRouter.get('', [authMiddleware('financial'), (req:Request, resp:Response, next:NextFunction) => {
     reimbursementService.getAllReimbursements()
         .then((data) => {
             let allReimbursements = new Array();
-            data.Items.forEach((value) => {
+            data.Items.forEach((value:any) => {
                 allReimbursements.push(value);
             });
             resp.json(allReimbursements);
@@ -22,12 +22,12 @@ viewRouter.get('', [authMiddleware('financial'), (req, resp, next) => {
         });
 }]);
 
-viewRouter.get('/users', [authMiddleware('financial'), (req, resp, next) => { 
+viewRouter.get('/users', [authMiddleware('financial'), (req:Request, resp:Response, next:NextFunction) => { 
     
     userService.getUsernames()
-        .then((data) => {
+        .then((data:any) => {
             let response = new Array();
-            data.Items.forEach((data) => {
+            data.Items.forEach((data:any) => {
                 if (response.indexOf(data) === -1) {
                     response.push(data);
                 }
@@ -41,7 +41,7 @@ viewRouter.get('/users', [authMiddleware('financial'), (req, resp, next) => {
         });
 }]);
 
-viewRouter.get('/users/:username', [authMiddleware('financial'), (req, resp, next) => {
+viewRouter.get('/users/:username', [authMiddleware('financial'), (req:Request, resp:Response, next:NextFunction) => {
     
     reimbursementService.getAllFor(req.params.username)
         .then((data) => {
@@ -54,7 +54,7 @@ viewRouter.get('/users/:username', [authMiddleware('financial'), (req, resp, nex
         });
 }]);
 
-viewRouter.get('/pending', [authMiddleware('financial'), (req, resp, next) => {
+viewRouter.get('/pending', [authMiddleware('financial'), (req:Request, resp:Response, next:NextFunction) => {
     
     reimbursementService.getAllPending()
     .then((data) => {
@@ -67,7 +67,7 @@ viewRouter.get('/pending', [authMiddleware('financial'), (req, resp, next) => {
     });
 }]);
 
-viewRouter.get('/users/:username/pending', [authMiddleware('financial'), (req, resp, next) => {
+viewRouter.get('/users/:username/pending', [authMiddleware('financial'), (req:Request, resp:Response, next:NextFunction) => {
     reimbursementService.getPendingFor(req.params.username)
     .then((data) => {
         resp.json(data.Items);
@@ -79,7 +79,7 @@ viewRouter.get('/users/:username/pending', [authMiddleware('financial'), (req, r
     });
 }]);
 
-viewRouter.post('/reimbursement', [authMiddleware('financial'), (req, resp, next) => {
+viewRouter.post('/reimbursement', [authMiddleware('financial'), (req:Request, resp:Response, next:NextFunction) => {
     
     const reimb = req.body;
 
