@@ -48,6 +48,8 @@ userRouter.get('/:username/reimbursements', (req:Request, resp:Response, next:Ne
 userRouter.post('/login', (req:Request, resp:Response, next:NextFunction) => {
     const user = req.body && req.body;
 
+    console.log(user);
+    
     userService.getUser(user.username)
         .then((data) => {
             console.log(data.Items);

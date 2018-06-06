@@ -1,4 +1,4 @@
-{
+/*{
   "compilerOptions": {
     "baseUrl": ".",
     "outDir": "build/dist",
@@ -17,6 +17,23 @@
     "strictNullChecks": false,
     "suppressImplicitAnyIndexErrors": true,
     "noUnusedLocals": true
+  },
+  "exclude": [
+    "node_modules",
+    "build",
+    "scripts",
+    "acceptance-tests",
+    "webpack",
+    "jest",
+    "src/setupTests.ts"
+  ]
+}
+*/
+
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "jsx": "react"
   },
   "exclude": [
     "node_modules",
