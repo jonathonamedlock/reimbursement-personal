@@ -6,12 +6,9 @@ pipeline {
     }
     
     environment {
-        JENKINS_NODE_COOKIE = 'dontkill'
-        AWS_ACCESS_KEY = "${AWS_ACCESS_KEY}"
-        AWS_SECRET_ACCESS_KEY = "${AWS_SECRET_ACCESS_KEY}"
-        REIMBURSEMENT_STAGE = "${REIMBURSEMENT_STAGE}"
-        REIMBURSEMENT_APP_URL = "${REIMBURSEMENT_APP_URL}"
-        REIMBURSEMENT_REGION = "${REIMBURSEMENT_REGION}"
+        REIMBURSEMENT_REGION="${REIMBURSEMENT_REGION}"
+        AWS_ACCESS_KEY_ID= "${AWS_ACCESS_KEY_ID}"
+        AWS_SECRET_ACCESS_KEY="${AWS_SECRET_ACCESS_KEY}"
     }
     
     stages {
@@ -19,49 +16,46 @@ pipeline {
             steps {
               // clean the workspace
               cleanWs()
-              sh 'echo $AWS_ACCESS_KEY'
             }
         }
 
        stage('Download') {
            steps {
               // Download code from a GitHub repository
-              git 'https://github.com/jonathonamedlock/reimbursement-personal.git'
+              git 'https://github.com/jonathonamedlock/reimbursement-personal'
            }
         }
 
-        stage('NPM Install') {
-            steps {
-                // go into client-side directory
-                dir('reimbursement-service') {
-                    dir('backend') {
-                        // install node modules
-                        sh 'npm install'
-                    }
-                }
-            }
-        }
+        // stage('NPM Install') {
+        //     steps {
+        //         // go into client-side directory
+        //         dir('week4') {
+        //             dir('redux-demo') {
+        //                 // install node modules
+        //                 sh 'npm install'
+        //             }
+        //         }
+        //     }
+        // }
         
-        stage('Destroy Old Server') {
-            steps {
-                script {
-                    try {
-                        // kill any running instances
-                        sh "fuser -k 3000/tcp"
-                    } catch (all) {
-                        // if it fails that should mean a server wasn't already running
-                    }
-                }
-            }
-        }
+        // stage('NPM Build') {
+        //     steps {
+        //         // go into client-side directory
+        //         dir('week4') {
+        //             dir('redux-demo') {
+        //                 // install node modules
+        //                 sh 'npm run build'
+        //             }
+        //         }
+        //     }
+        // }
 
         stage('Deploy') {
             steps {
                 dir('reimbursement-service') {
-                    dir('backend') {
+                    dir('frontend') {
                         // Deploy the application
-                        sh 'nohup npm run deploy &'
-                        // sh 'npm run deploy'
+                         s3Upload(bucket:"${BUCKET_NAME}", path:'', file: 'build/')
                     }
                 }
             }
