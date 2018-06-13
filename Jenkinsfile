@@ -52,12 +52,12 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                dir('reimbursement-service') {
-                    dir('frontend') {
+                //dir('reimbursement-service') {
+                    //dir('frontend') {
                         // Deploy the application
                          s3Upload(bucket:"${BUCKET_NAME}", path:'', file: 'build/')
-                    }
-                }
+                    //}
+                //}
             }
         }
 
