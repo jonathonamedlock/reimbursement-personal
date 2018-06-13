@@ -7,8 +7,8 @@ pipeline {
     
     environment {
         REIMBURSEMENT_REGION="${REIMBURSEMENT_REGION}"
-        AWS_ACCESS_KEY= "${AWS_ACCESS_KEY}"
-        AWS_SECRET_ACCESS_KEY="${AWS_SECRET_ACCESS_KEY}"
+        AWS_ACCESS_KEY_ID= "${AWS_ACCESS_KEY}"
+        AWS_SECRET_KEY="${AWS_SECRET_ACCESS_KEY}"
     }
     
     stages {

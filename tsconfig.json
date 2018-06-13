@@ -33,7 +33,8 @@
 {
   "compilerOptions": {
     "module": "commonjs",
-    "jsx": "react"
+    "jsx": "react",
+    "baseUrl": "."
   },
   "exclude": [
     "node_modules",
