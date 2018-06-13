@@ -52,8 +52,8 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                dir('week4') {
-                    dir('redux-demo') {
+                dir('reimbursement-service') {
+                    dir('backend') {
                         // Deploy the application
                          s3Upload(bucket:"${BUCKET_NAME}", path:'', file: 'build/')
                     }
