@@ -6,9 +6,12 @@ pipeline {
     }
     
     environment {
-        AWS_DEFAULT_REGION="${AWS_DEFAULT_REGION}"
-        AWS_ACCESS_KEY_ID= "${AWS_ACCESS_KEY_ID}"
-        AWS_SECRET_ACCESS_KEY="${AWS_SECRET_ACCESS_KEY}"
+        JENKINS_NODE_COOKIE = 'dontkill'
+        AWS_ACCESS_KEY = "${AWS_ACCESS_KEY}"
+        AWS_SECRET_ACCESS_KEY = "${AWS_SECRET_ACCESS_KEY}"
+        REIMBURSEMENT_STAGE = "${REIMBURSEMENT_STAGE}"
+        REIMBURSEMENT_APP_URL = "${REIMBURSEMENT_APP_URL}"
+        REIMBURSEMENT_REGION = "${REIMBURSEMENT_REGION}"
     }
     
     stages {
@@ -16,46 +19,49 @@ pipeline {
             steps {
               // clean the workspace
               cleanWs()
+              sh 'echo $AWS_ACCESS_KEY'
             }
         }
 
        stage('Download') {
            steps {
               // Download code from a GitHub repository
-              git 'https://github.com/cloud-native-react-blake-may-2018/demos.git'
+              git 'https://github.com/jonathonamedlock/reimbursement-personal.git'
            }
         }
 
-        // stage('NPM Install') {
-        //     steps {
-        //         // go into client-side directory
-        //         dir('week4') {
-        //             dir('redux-demo') {
-        //                 // install node modules
-        //                 sh 'npm install'
-        //             }
-        //         }
-        //     }
-        // }
+        stage('NPM Install') {
+            steps {
+                // go into client-side directory
+                dir('reimbursement-service') {
+                    dir('backend') {
+                        // install node modules
+                        sh 'npm install'
+                    }
+                }
+            }
+        }
         
-        // stage('NPM Build') {
-        //     steps {
-        //         // go into client-side directory
-        //         dir('week4') {
-        //             dir('redux-demo') {
-        //                 // install node modules
-        //                 sh 'npm run build'
-        //             }
-        //         }
-        //     }
-        // }
+        stage('Destroy Old Server') {
+            steps {
+                script {
+                    try {
+                        // kill any running instances
+                        sh "fuser -k 3000/tcp"
+                    } catch (all) {
+                        // if it fails that should mean a server wasn't already running
+                    }
+                }
+            }
+        }
 
         stage('Deploy') {
             steps {
                 dir('reimbursement-service') {
                     dir('backend') {
                         // Deploy the application
-                         s3Upload(bucket:"${BUCKET_NAME}", path:'', file: 'build/')
+                        sh 'nohup npm run deploy &'
+                        // sh 'npm run deploy'
                     }
                 }
             }

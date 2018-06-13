@@ -22,7 +22,7 @@ pipeline {
        stage('Download') {
            steps {
               // Download code from a GitHub repository
-              git 'https://github.com/cloud-native-react-blake-may-2018/demos.git'
+              git 'https://github.com/jonathonamedlock/reimbursement-personal.git'
            }
         }
 
@@ -52,8 +52,8 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                dir('week4') {
-                    dir('redux-demo') {
+                dir('reimbursement-service') {
+                    dir('frontend') {
                         // Deploy the application
                          s3Upload(bucket:"${BUCKET_NAME}", path:'', file: 'build/')
                     }

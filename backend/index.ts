@@ -44,22 +44,24 @@ app.use((req, res, next) => {
 // use the body parser to convert request json
 app.use(bodyParser.json());
 
-// allow cross origins
 app.use((req, resp, next) => {
+  (process.env.REIMBURSEMENT_STAGE === 'prod')
+    ? resp.header('Access-Control-Allow-Origin', process.env.REIMBURSEMENT_APP_URL)
+    : resp.header('Access-Control-Allow-Origin', 'http://localhost:3001');
+  resp.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  resp.header('Access-Control-Allow-Credentials', 'true');
+  resp.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
+  next();
+});
+// allow cross origins
+/*app.use((req, resp, next) => {
   resp.header("Access-Control-Allow-Origin", "http://localhost:3001");
   resp.header("Access-Control-Allow-Credentials", "true");
   resp.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
   resp.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
-});
-
-/*app.use((req, resp, next) => {
-  if(typeof req.cookies['connect.sid'] !== 'undefined') {
-    console.log(req.cookies['connect.sid']);
-  }
-
-  next();
 });*/
+
 
 /*******************************************************************************
  * ROUTERS
