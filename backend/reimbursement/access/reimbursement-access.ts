@@ -58,6 +58,21 @@ export function getPendingReimbursementsForUser(username: string): Promise<any> 
     }).promise();
 }
 
+export function updateReimbursementStatusFinance(username: string, timeCreated: number, newStatus: string, approver: string): Promise<any> {
+    return docClient.update({
+        TableName: 'reimbursement',
+        Key: {
+            "username": username,
+            "timeSubmitted": timeCreated
+        },
+        UpdateExpression: "set reimbursementStatus=:newStatus, approver=:approver",
+        ExpressionAttributeValues: {
+            ":newStatus": newStatus,
+            ":approver": approver
+        }
+    }).promise();
+}
+
 export function updateReimbursementStatus(username: string, timeCreated: number, newStatus: string): Promise<any> {
     return docClient.update({
         TableName: 'reimbursement',

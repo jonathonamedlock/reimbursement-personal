@@ -16,7 +16,11 @@ export function getPendingFor(user: string) {
     return Access.getPendingReimbursementsForUser(user);
 }
 
-export function updateReimbursement(item:any, newStatus: string) {
+export function updateReimbursement(item:any, newStatus: string, approver: string) {
+    return Access.updateReimbursementStatusFinance(item.username, item.timeSubmitted, newStatus, approver);
+}
+
+export function updateReimbursementSelf(item:any, newStatus: string) {
     return Access.updateReimbursementStatus(item.username, item.timeSubmitted, newStatus);
 }
 

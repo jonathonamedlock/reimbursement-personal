@@ -7,32 +7,25 @@ import { authMiddleware, authUsername } from '../security/auth-middleware';
 
 export const userRouter = express.Router();
 
-userRouter.get('/:username', (req:Request, resp:Response, next:NextFunction) => {
-    if (!authUsername(req.params.username, req.session.username)) {
-        resp.status(403);
-        next();
-    } else {
-        console.log(`Retrieving ${req.params.username}`);
-        userService.getUser(req.params.username)
+userRouter.get('/profile', (req:Request, resp:Response, next:NextFunction) => {
+    if (req.session.username) {
+        console.log(`Retrieving ${req.session.username}`);
+        userService.getUser(req.session.username)
             .then((data) => {
-                console.log(data);
                 resp.json(data.Items[0]);
             }).catch((err) => {
 
             });
+    } else {
+        resp.sendStatus(401);
     }
+    //}
 });
 
-userRouter.get('/:username/reimbursements', (req:Request, resp:Response, next:NextFunction) => {
-    // TODO add authorization middleware
-    console.log(req.params.username + ' ' + req.session.username);
-    
-    if (!authUsername(req.params.username, req.session.username)) {
-        resp.status(403);
-        next();
-    } else {
-        console.log(`Retrieving ${req.params.username}/reimbursements`);
-        reimbursementService.getAllFor(req.params.username)
+userRouter.get('/reimbursements', (req:Request, resp:Response, next:NextFunction) => {
+    if (req.session.username) {
+        console.log(`Retrieving ${req.session.username}/reimbursements`);
+        reimbursementService.getAllFor(req.session.username)
             .then((data) => {
                 let allReimbursements = new Array();
                 data.Items.forEach((value:any) => {
@@ -42,23 +35,27 @@ userRouter.get('/:username/reimbursements', (req:Request, resp:Response, next:Ne
             }).catch((err) => {
 
             });
+    } else {
+        resp.sendStatus(401);
     }
 });
 
 userRouter.post('/login', (req:Request, resp:Response, next:NextFunction) => {
     const user = req.body && req.body;
 
-    console.log(user);
-    
+    if (!user.username) {
+        resp.sendStatus(401);
+    }
     userService.getUser(user.username)
         .then((data) => {
-            console.log(data.Items);
-            console.log(user);
             
             if (user.username === data.Items[0].username && user.password === data.Items[0].password) {
+                
+                
                 req.session.role = data.Items[0].role;
                 req.session.username = data.Items[0].username;
                 if (data.Items[0].role === 'financial') {
+                    
                     resp.json({
                         username: user.username,
                         role: 'financial'
@@ -78,34 +75,39 @@ userRouter.post('/login', (req:Request, resp:Response, next:NextFunction) => {
         });
 });
 
-userRouter.post('/:username/request', (req:Request, resp:Response, next:NextFunction) => {
-    if (!authUsername(req.params.username, req.session.username)) {
-        resp.status(403);
-        next();
-    } else {
+userRouter.post('/request', (req:Request, resp:Response, next:NextFunction) => {
+    console.log('requesting');
+    
+    if (req.session.username) {
         const reimburse = req.body;
+        reimburse.username = req.session.username;
+        reimburse.reimbursementStatus = Status.PENDING,
+        reimburse.timeSubmitted = new Date().toJSON();
+        console.log(reimburse);
 
         reimbursementService.addReimbursement(reimburse)
             .then((data) => {
+                
                 resp.json({
                     status: 'success'
                 });
             }).catch ((err) => {
+                console.log(err);
                 resp.json({
                     status: 'failed'
                 });
             });
+    } else {
+        resp.sendStatus(401);
     }
 });
 
-userRouter.post('/:username/cancel', (req:Request, resp:Response, next:NextFunction) => {
-    if (!authUsername(req.params.username, req.session.username)) {
-        resp.status(403);
-        next();
-    } else {
+userRouter.post('/cancel', (req:Request, resp:Response, next:NextFunction) => {
+    if (req.session.username) {
         const reimb = req.body;
-
-        reimbursementService.updateReimbursement(reimb, Status.CANCELLED)
+        reimb.username = req.session.username;
+        
+        reimbursementService.updateReimbursementSelf(reimb, Status.CANCELLED)
             .then((data) => {
                 resp.json({
                     status: 'success'
@@ -116,6 +118,8 @@ userRouter.post('/:username/cancel', (req:Request, resp:Response, next:NextFunct
                     info: err
                 });
             });
+    } else {
+        resp.sendStatus(401);
     }
 });
 

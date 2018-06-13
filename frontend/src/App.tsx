@@ -1,8 +1,15 @@
 import * as React from 'react';
+import * as Axios from 'axios';
 
-import { LoginComponent } from './components/login.component'
-// import { FirstComponent } from './components/first.component';
-// import { NavComponent } from './components/nav.component';
+import { AddReimbursementComponent } from './components/add.reimbursement.component';
+import { FinancialReimbursementListComponent } from './components/financial.reimbursement.list.component';
+import { FinancialReimbursementPendingComponent } from './components/financial.reimbursement.pending.component';
+import { LoginComponent } from './components/login.component';
+import { ProfileComponent } from './components/profile.component';
+import { UserListComponent } from './components/user.list.component';
+import { UserReimbursementListComponent } from './components/user.reimbursement.list.component';
+import { NavComponent } from './components/nav.component';
+
 import './include/bootstrap';
 import './App.css';
 import { HashRouter, Switch, Route } from 'react-router-dom';
@@ -12,27 +19,41 @@ import { HashRouter, Switch, Route } from 'react-router-dom';
 
 class App extends React.Component<any, any> {
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      role: '',
+      username: '',
+    }
+
+  }
+
   public render() {
-    return (/*
-      <HashRouter>
-        <div>
-          <NavComponent />
-          <Switch>
-            <Route path="/first" component={FirstComponent} />
-            <Route path="/second" component={SecondComponent} />
-            <Route path="/clicker" component={ClickerComponent} />
-            <Route path="/tic-tac-toe" component={TicTacToeComponent} />
-            <Route component={FirstComponent} />
-          </Switch>
-        </div>
-      </HashRouter>*/
+    return (
+      <div>
+        <NavComponent/>
         <HashRouter>
-            <Switch>
-                <Route path="/login" component={LoginComponent} />
-                {/*<Route path="/:username" component={ProfileComponent} />*/}
-            </Switch>
+          <Switch>
+              <Route path="/login" {...this.props} getData={this.getData} component={LoginComponent} />
+              <Route path="/reimbursements/add" component={AddReimbursementComponent} />
+              <Route path="/reimbursements" component={UserReimbursementListComponent}/>
+              <Route path="/profile" component={ProfileComponent} />
+              <Route path="/view/pending" component={FinancialReimbursementPendingComponent}/>
+              <Route path="/view/users" component={UserListComponent} />
+              <Route path="/view" component={FinancialReimbursementListComponent} />
+          </Switch>
         </HashRouter>
+      </div>
     );
+  }
+
+  public getData = (data) => {
+    console.log('revieved data');
+    
+    this.setState({
+      role: data.role,
+      username: data.username,
+    });
   }
 }
 

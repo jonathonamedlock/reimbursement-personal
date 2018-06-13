@@ -11,6 +11,7 @@
     "jsx-self-close": false,
     "jsx-no-lambda": false,
     "no-console": false,
-    "jsx-no-bind": false
+    "jsx-no-bind": false,
+    "prefer-for-of": false
   }
 }

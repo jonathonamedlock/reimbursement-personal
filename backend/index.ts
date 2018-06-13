@@ -1,6 +1,8 @@
 //import express = require('express');
 import * as express from 'express';
 import * as bodyParser from 'body-parser';
+import * as cookieParser from 'cookie-parser';
+import * as cookie from 'cookie';
 import * as session from 'express-session';
 import * as path from 'path';
 import { userRouter } from './routers/user-router';
@@ -14,14 +16,19 @@ app.set('port', port);
 
 
 const sess = {
+  permission: 'permission',
   secret: 'keyboard cat',
   cookie: { secure: false },
   resave: false,
-  saveUninitialized: false
+  saveUninitialized: true,
+  username: '',
+  role: ''
 };
 
 // set up express to attach sessions
 app.use(session(sess));
+
+app.use(cookieParser('keyboard cat'));
 
 // allow static content to be served, navigating to url with nothing after / will serve index.html from public
 app.use(
@@ -39,10 +46,20 @@ app.use(bodyParser.json());
 
 // allow cross origins
 app.use((req, resp, next) => {
-  resp.header("Access-Control-Allow-Origin", "*");
+  resp.header("Access-Control-Allow-Origin", "http://localhost:3001");
+  resp.header("Access-Control-Allow-Credentials", "true");
+  resp.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
   resp.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
-})
+});
+
+/*app.use((req, resp, next) => {
+  if(typeof req.cookies['connect.sid'] !== 'undefined') {
+    console.log(req.cookies['connect.sid']);
+  }
+
+  next();
+});*/
 
 /*******************************************************************************
  * ROUTERS

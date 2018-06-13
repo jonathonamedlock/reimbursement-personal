@@ -42,6 +42,7 @@ viewRouter.get('/users', [authMiddleware('financial'), (req:Request, resp:Respon
 }]);
 
 viewRouter.get('/users/:username', [authMiddleware('financial'), (req:Request, resp:Response, next:NextFunction) => {
+    console.log("Getting all for " + req.params.username);
     
     reimbursementService.getAllFor(req.params.username)
         .then((data) => {
@@ -68,6 +69,9 @@ viewRouter.get('/pending', [authMiddleware('financial'), (req:Request, resp:Resp
 }]);
 
 viewRouter.get('/users/:username/pending', [authMiddleware('financial'), (req:Request, resp:Response, next:NextFunction) => {
+    console.log("Getting pending for " + req.params.username);
+    
+
     reimbursementService.getPendingFor(req.params.username)
     .then((data) => {
         resp.json(data.Items);
@@ -79,11 +83,11 @@ viewRouter.get('/users/:username/pending', [authMiddleware('financial'), (req:Re
     });
 }]);
 
-viewRouter.post('/reimbursement', [authMiddleware('financial'), (req:Request, resp:Response, next:NextFunction) => {
+viewRouter.post('/update', [authMiddleware('financial'), (req:Request, resp:Response, next:NextFunction) => {
     
     const reimb = req.body;
 
-    reimbursementService.updateReimbursement(reimb, reimb.reimbursementStatus)
+    reimbursementService.updateReimbursement(reimb, reimb.reimbursementStatus, req.session.username)
         .then((data) => {
             resp.json({
                 status: 'success'

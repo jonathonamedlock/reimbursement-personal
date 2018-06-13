@@ -86,17 +86,45 @@
     box-shadow: 1px -12px 28px -1px rgba(0, 0, 0, 0.87);
   }
   
-  
-  /*****************************
-    TIC TAC TOE
-  *****************************/
-  .tic-tac-col {
-    border: 1px solid black;
-    font-size: 4em;
-    text-align: center;
-    min-height: 1em ;
+
+  .modal-body {
+    color: black !important;
+    background-color: white !important;
   }
-  #tic-tac-board {
-    width: 75%;
+
+  .modal-header {
+    color: black !important;
+    background-color: white !important;
   }
-  
+
+  a {
+    text-decoration: none;
+    color: white;
+  }
+
+  .btn-warning {
+    color: white;
+  }
+
+  .btn-warning:hover {
+    color: white;
+  }
+
+  a:hover {
+    color: white;
+    text-decoration: none;
+  }
+
+  .warning-message {
+    color: red;
+    font-weight: bold;
+  }
+
+  .fake-link {
+    color: blue !important;
+    cursor: pointer;
+  }
+
+  .fake-link:hover {
+    text-decoration: underline !important;
+  }
